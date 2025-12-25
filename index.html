@@ -4,42 +4,53 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>npm install christmas-tree</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Orbitron:wght@400;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./style.css" />
   </head>
+
   <body>
     <div id="app" class="crt scanline">
+      <!-- Terminal -->
       <div id="terminal" class="terminal-overlay">
         <div class="terminal-content">
-          <span class="prompt">user@dev:~$</span> <span id="typewriter"></span
-          ><span class="cursor">█</span>
+          <span class="prompt">user@dev:~$</span>
+          <span id="typewriter"></span>
+          <span class="cursor">█</span>
           <div id="logs"></div>
         </div>
       </div>
+
+      <!-- Scene -->
       <div id="scene">
-        <canvas id="bg-canvas"></canvas>
         <canvas id="tree-canvas"></canvas>
         <canvas id="snow-canvas"></canvas>
       </div>
+
+      <!-- UI -->
       <div id="ui-top">
         <h1 id="title" class="hidden glitch">MERRY CHRISTMAS</h1>
-        <div id="stats" class="hidden">
-           Global Installs: <span id="install-count">Loading...</span>
-        </div>
       </div>
+
       <div id="ui-bottom">
         <div class="action-buttons">
-                    <button id="reset-btn" class="hidden">Run Again</button>
+          <button id="reset-btn" class="hidden">Run Again</button>
         </div>
         <div id="footer" class="hidden">
-           made by WB
+          made by <a href="https://github.com/INSANE1217" target="_blank">WB</a>
         </div>
       </div>
     </div>
-    <script type="module" src="/main.js"></script>
+
+    <!-- ✅ 중요: 상대경로 + module -->
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
