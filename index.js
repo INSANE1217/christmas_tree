@@ -1,12 +1,7 @@
 import { Terminal } from './terminal.js';
-export { Terminal };
 import { MatrixTree } from './tree.js';
-export { MatrixTree };
 import { Snow } from './snow.js';
-export { Snow };
-import { incrementGlobalInstalls, getGlobalInstalls } from './firebase.js';
-export { incrementGlobalInstalls, getGlobalInstalls };
-
+import { incrementGlobalInstalls } from './firebase.js';
 import './style.css';
 
 export class ChristmasTreeApp {
@@ -28,20 +23,28 @@ export class ChristmasTreeApp {
   }
 
   terminalPhase() {
-    const term = new Terminal(this.options.typewriterId, this.options.logsId, () => {
+    const term = new Terminal(
+      this.options.typewriterId,
+      this.options.logsId,
+      () => {}
+    );
+
+    term.start();
+
+    // 🔥 연출이 멈추지 않도록 강제 진행
+    setTimeout(() => {
       const overlay = document.getElementById(this.options.terminalId);
       if (overlay) overlay.classList.add('fade-out');
-      
-      incrementGlobalInstalls().then(count => {
-        const statsEl = document.getElementById(this.options.installCountId);
-        if (statsEl) statsEl.textContent = count.toLocaleString();
-      });
 
-      setTimeout(() => {
-        this.startScene();
-      }, 1000);
-    });
-    term.start();
+      incrementGlobalInstalls()
+        .then(count => {
+          const statsEl = document.getElementById(this.options.installCountId);
+          if (statsEl) statsEl.textContent = count.toLocaleString();
+        })
+        .catch(() => {});
+
+      this.startScene();
+    }, 3000);
   }
 
   startScene() {
@@ -56,14 +59,14 @@ export class ChristmasTreeApp {
 
   showUI() {
     const elements = ['title', 'stats', 'reset-btn', 'share-btn', 'footer'];
+
     elements.forEach((id, index) => {
       const el = document.getElementById(id);
       if (el) {
         setTimeout(() => {
           el.classList.remove('hidden');
-          void el.offsetWidth;
           el.classList.add('visible');
-        }, index * 500);
+        }, index * 400);
       }
     });
 
@@ -71,7 +74,7 @@ export class ChristmasTreeApp {
   }
 
   initEventListeners() {
-    
+    const resetBtn = document.getElementById('reset-btn');
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         location.reload();
