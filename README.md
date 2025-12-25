@@ -155,8 +155,8 @@ Contributions are welcome! Feel free to:
 
 **Seochan**
 
-- Instagram: [@dev_seochan](https://www.instagram.com/dev_seochan/)
-- GitHub: [@seochan99](https://github.com/seochan99)
+- Instagram: [@l_wb_06_](https://www.instagram.com/l_wb_06_/)
+- GitHub: [@INSANE1217](https://github.com/INSANE1217)
 
 ## 📄 License
 
