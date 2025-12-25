@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Tree Library Example</title>
+    <style>
+        :root {
+            --primary: #00ff64;
+            --secondary: #00ccff;
+            --bg: #050505;
+            --card-bg: rgba(20, 20, 20, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column; /* Changed to column */
+            align-items: center;
+            justify-content: center; /* Still center, but we'll use min-height */
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto; /* Allow scrolling */
+        }
+
+        .main-wrapper {
+            position: relative; /* Crucial for z-index */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            padding: 4rem 2rem; /* Increased vertical padding */
+            z-index: 20;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin: 0 0 1.5rem 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #aaa;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2.5rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .main-wrapper { padding: 3rem 1.5rem; }
+            body { justify-content: flex-start; } /* Prevent negative top on small screens */
+        }
+
+        /* Glassmorphism Card */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 2.5rem;
+            border-radius: 32px;
+            border: 1px solid var(--border);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100%;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .setting-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .setting-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .setting-group input[type="color"] {
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .setting-group input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        .setting-group input[type="color"]::-webkit-color-swatch { 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .setting-group input[type="number"], 
+        .setting-group select {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 1rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            outline: none;
+            width: 100%;
+        }
+
+        .setting-group input:focus, .setting-group select:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(0, 255, 100, 0.1);
+        }
+
+        /* Code Preview */
+        .code-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; opacity: 0.8; }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        pre {
+            background: #000;
+            padding: 2rem;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            margin: 0;
+            flex-grow: 1;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .keyword { color: #c678dd; font-weight: 600; }
+        .string { color: #98c379; }
+        .number { color: #d19a66; }
+        .comment { color: #5c6370; font-style: italic; }
+
+        .cta-button {
+            margin-top: 2rem;
+            padding: 1.4rem;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #050505;
+            background: linear-gradient(135deg, var(--primary), #00ffa2);
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            box-shadow: 0 15px 30px rgba(0, 255, 100, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 255, 100, 0.35);
+            filter: brightness(1.1);
+        }
+
+        .cta-button:active { transform: translateY(-1px); }
+
+        /* Essential library styles */
+        #terminal, #ui-top, #ui-bottom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Lower than UI */
+            pointer-events: none; /* Do not block interaction */
+        }
+
+        .hidden { display: none !important; }
+        .visible { display: block !important; pointer-events: auto !important; }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper" id="landing">
+        <header>
+            <h1>npm-christmas-tree</h1>
+            <p class="subtitle">The ultimate developer's holiday library. Customize your experience and integrate it into any project with just a few lines of code.</p>
+        </header>
+
+        <div class="grid">
+            <div class="card settings-panel">
+                <div class="setting-group">
+                    <div class="setting-label-row">
+                        <label>Snow Shape</label>
+                    </div>
+                    <select id="param-type">
+                        <option value="tree">Tree Shaped Particles</option>
+                        <option value="circle">Classic Round Snow</option>
+                    </select>
+                </div>
+                
+                <div class="setting-group">
+                    <label>Particle Color</label>
+                    <input type="color" id="param-color" value="#00ff64">
+                </div>
+
+                <div class="setting-group">
+                    <label>Intensity (Count)</label>
+                    <input type="number" id="param-count" value="150" min="10" max="1000">
+                </div>
+
+                <div class="setting-group">
+                    <label>Maximum Size</label>
+                    <input type="number" id="param-size" value="6" min="1" max="20">
+                </div>
+            </div>
+
+            <div class="card code-container">
+                <div class="code-header">
+                    <div class="dot red"></div>
+                    <div class="dot yellow"></div>
+                    <div class="dot green"></div>
+                    <span style="font-size: 0.8rem; color: #666; margin-left: auto;">integration.js</span>
+                </div>
+                <pre id="code-preview"></pre>
+                <button class="cta-button" id="launch-btn">
+                    <span>Launch Experience</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- The library expects these standard IDs if not overridden in config -->
+    <div id="terminal" class="hidden">
+        <div id="typewriter"></div>
+        <div id="logs"></div>
+    </div>
+
+    <div id="ui-top" class="hidden">
+        <h1 id="title">MERRY CHRISTMAS</h1>
+        <div id="stats">Global Installs: <span id="install-count">Loading...</span></div>
+    </div>
+
+    <div id="ui-bottom" class="hidden">
+        <div class="action-buttons">
+                        <button id="reset-btn" class="hidden">Run Again</button>
+        </div>
+        <div id="footer">made by WB</div>
+    </div>
+
+    <canvas id="tree-canvas" class="hidden"></canvas>
+    <canvas id="snow-canvas"></canvas>
+
+    <!-- Import the library as an ES Module -->
+    <script type="module">
+        import { ChristmasTreeApp, Snow } from '../index.js';
+
+        let activeSnow = null;
+
+        const startSnow = () => {
+            const snowType = document.getElementById('param-type').value;
+            const snowColor = document.getElementById('param-color').value;
+            const flakeCount = parseInt(document.getElementById('param-count').value);
+            const maxSize = parseInt(document.getElementById('param-size').value);
+
+            if (activeSnow) activeSnow.stop();
+            
+            activeSnow = new Snow('snow-canvas', {
+                type: snowType,
+                color: snowColor,
+                minSize: Math.max(1, maxSize - 3),
+                maxSize: maxSize,
+                count: flakeCount
+            });
+            activeSnow.start();
+        };
+
+        const updateCodePreview = () => {
+            const snowType = document.getElementById('param-type').value;
+            const snowColor = document.getElementById('param-color').value;
+            const flakeCount = document.getElementById('param-count').value;
+            const maxSize = document.getElementById('param-size').value;
+
+            document.getElementById('code-preview').innerHTML = `
+<span class="keyword">import</span> { ChristmasTreeApp } <span class="keyword">from</span> <span class="string">'npm-christmas-tree'</span>;
+
+<span class="keyword">const</span> app = <span class="keyword">new</span> <span class="keyword">ChristmasTreeApp</span>({
+  <span class="string">snowOptions</span>: {
+    <span class="string">type</span>: <span class="string">'${snowType}'</span>,
+    <span class="string">color</span>: <span class="string">'${snowColor}'</span>,
+    <span class="string">minSize</span>: <span class="number">${Math.max(1, maxSize - 3)}</span>,
+    <span class="string">maxSize</span>: <span class="number">${maxSize}</span>,
+    <span class="string">count</span>: <span class="number">${flakeCount}</span>
+  }
+});
+
+app.start();`.trim();
+            
+            // Apply snow changes in real-time
+            startSnow();
+        };
+
+        // Initialize preview and snow on load
+        updateCodePreview();
+
+        // Listen for changes
+        ['param-type', 'param-color', 'param-count', 'param-size'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateCodePreview);
+        });
+
+        document.getElementById('launch-btn').addEventListener('click', () => {
+            // Hide landing
+            document.getElementById('landing').classList.add('hidden');
+            
+            // Show necessary elements
+            document.getElementById('terminal').classList.remove('hidden');
+            document.getElementById('ui-top').classList.remove('hidden');
+            document.getElementById('ui-bottom').classList.remove('hidden');
+            document.getElementById('tree-canvas').classList.remove('hidden');
+
+            // Initialize the full app
+            const app = new ChristmasTreeApp({
+                snowOptions: activeSnow.options // Use current settings
+            });
+            
+            app.start();
+        });
+    </script>
+</body>
+</html>

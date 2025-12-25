@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>npm install christmas-tree</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Orbitron:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app" class="crt scanline">
+      <div id="terminal" class="terminal-overlay">
+        <div class="terminal-content">
+          <span class="prompt">user@dev:~$</span> <span id="typewriter"></span
+          ><span class="cursor">█</span>
+          <div id="logs"></div>
+        </div>
+      </div>
+      <div id="scene">
+        <canvas id="bg-canvas"></canvas>
+        <canvas id="tree-canvas"></canvas>
+        <canvas id="snow-canvas"></canvas>
+      </div>
+      <div id="ui-top">
+        <h1 id="title" class="hidden glitch">MERRY CHRISTMAS</h1>
+        <div id="stats" class="hidden">
+           Global Installs: <span id="install-count">Loading...</span>
+        </div>
+      </div>
+      <div id="ui-bottom">
+        <div class="action-buttons">
+                    <button id="reset-btn" class="hidden">Run Again</button>
+        </div>
+        <div id="footer" class="hidden">
+           made by WB
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

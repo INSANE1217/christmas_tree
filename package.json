@@ -1,0 +1,49 @@
+{
+  "name": "npm-christmas-tree",
+  "version": "1.1.1",
+  "description": "A hyper-realistic, terminal-based Christmas tree experience for developers.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "bin": {
+    "npm-christmas-tree": "bin/cli.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "christmas",
+    "tree",
+    "matrix",
+    "terminal",
+    "npx",
+    "holiday"
+  ],
+  "author": "seochan",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seochan99/npm-christmas-tree.git"
+  },
+  "devDependencies": {
+    "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "open": "^10.1.0"
+  }
+}
