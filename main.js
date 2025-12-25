@@ -6,12 +6,13 @@ const app = new ChristmasTreeApp({
     logsId: 'logs',
     treeCanvasId: 'tree-canvas',
     snowCanvasId: 'snow-canvas',
-    installCountId: 'install-count',
+
+    // ❄️ 눈 옵션 (호환되는 것만 사용)
     snowOptions: {
-        type: 'tree',
-        color: 'rgba(0, 255, 100, 0.4)',
-        minSize: 2,
-        maxSize: 5
+        color: 'rgba(255, 255, 255, 0.8)',
+        minSize: 1,
+        maxSize: 4,
+        count: 200
     }
 });
 
